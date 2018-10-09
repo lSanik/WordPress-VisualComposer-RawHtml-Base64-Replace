@@ -19,6 +19,7 @@ function replace_composer_html_raw_base64(){
 
     if($_SERVER['REQUEST_URI'] == '/replace_composer_html_raw_base64'){
         global $wpdb;
+        
         ini_set('error_reporting', E_ALL);
         ini_set('display_errors', 1);
         ini_set('display_startup_errors', 1);
@@ -27,6 +28,7 @@ function replace_composer_html_raw_base64(){
         $count = count($response);
         $tag = 'vc_raw_js';//'vc_raw_js';//'vc_raw_html';//vc_raw_js
         $pattern = '\['.$tag.'].*?\]';
+
         foreach ($response as $post){
 
             $matches = '';
@@ -55,22 +57,23 @@ function replace_composer_html_raw_base64(){
 }
 // String with shortcode tag, and different tag send, like vc_raw_html,vc_raw_js, etc.
 function replacedComposerHtmlRawString($strings,$tag){
+    
     if(!is_array($strings)){
         return false;
     }
+    
     $return=array();
     foreach ($strings as $key=>$string){
         $return[$key]['original']= $string;
-        //var_dump($string);
         $string = str_replace('['.$tag.']','',$string);
         $string = str_replace('[/'.$tag.']','',$string);
         $string = base64_decode($string);
         $string = rawurldecode($string);//If something not working, try change this rawurlencode to urlencode, etc... dumped it =)
+
         //place to replace decoded string
-        //var_dump($string);
         $string = replacedComposerRawFromTo($string);
-        //var_dump()
         //end place..
+        
         $string = rawurlencode($string);
         $string = base64_encode($string);
         $string = '['.$tag.']'.$string.'[/'.$tag.']';
